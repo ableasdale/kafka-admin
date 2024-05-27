@@ -1,0 +1,29 @@
+---
+services:
+
+  broker:
+    image: krishnaconfluent/kafka-native:native-rc-0
+    hostname: broker
+    container_name: broker
+    #volumes:
+    #  - ./build/libs/kip-714-1.0-all.jar:/tmp/kip-714-1.0-all.jar
+    ports:
+      - "9092:9092"
+    #command: "bash -c 'export CLASSPATH=/usr/share/java:$CLASSPATH'"
+    #command: "bash -c 'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-*.jar /etc/kafka-connect/jars/; /etc/confluent/docker/run'"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092'
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_DEFAULT_MIN_ISR: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@broker:29093'
+      KAFKA_LISTENERS: 'PLAINTEXT://broker:29092,CONTROLLER://broker:29093,PLAINTEXT_HOST://0.0.0.0:9092'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      CLUSTER_ID: 'ZWe3nnZwTrKSM0aM2doAxQ'
+      #KAFKA_METRIC_REPORTERS: 'io.confluent.cse.KafkaClientTelemetry'
+      #CLASSPATH: '/tmp/kip-714-1.0-all.jar'
