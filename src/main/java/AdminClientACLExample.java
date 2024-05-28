@@ -1,6 +1,5 @@
 import org.apache.kafka.clients.admin.DescribeAclsResult;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.clients.admin.TopicListing;
 import org.apache.kafka.common.acl.*;
 import org.apache.kafka.common.resource.PatternType;
 import org.apache.kafka.common.resource.ResourcePattern;
@@ -12,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class AdminClientACLExample {
@@ -24,8 +21,8 @@ public class AdminClientACLExample {
         // 1. Create 100 topics (
         Collection<NewTopic> topics = new ArrayList<NewTopic>();
 
-        for (int i=1; i<=100; i++) {
-            topics.add(new NewTopic("test-"+i, 1, (short) 1));
+        for (int i = 1; i <= 100; i++) {
+            topics.add(new NewTopic("test-" + i, 1, (short) 1));
         }
         Helper.getAdminClient().createTopics(topics).all();
 
@@ -42,11 +39,11 @@ public class AdminClientACLExample {
         // 3. Create ACL Bindings
         Collection<AclBinding> aclBindings = new ArrayList<AclBinding>();
 
-        for (int i=1; i<=100; i++) {
-            aclBindings.add(new AclBinding(new ResourcePattern(ResourceType.TOPIC, "test-"+i, PatternType.LITERAL),
+        for (int i = 1; i <= 100; i++) {
+            aclBindings.add(new AclBinding(new ResourcePattern(ResourceType.TOPIC, "test-" + i, PatternType.LITERAL),
                     new AccessControlEntry("User:alex", "*", AclOperation.WRITE, AclPermissionType.DENY))
             );
-            aclBindings.add(new AclBinding(new ResourcePattern(ResourceType.TOPIC, "test-"+i, PatternType.LITERAL),
+            aclBindings.add(new AclBinding(new ResourcePattern(ResourceType.TOPIC, "test-" + i, PatternType.LITERAL),
                     new AccessControlEntry("User:*", "*", AclOperation.DESCRIBE, AclPermissionType.ALLOW))
             );
         }
@@ -59,7 +56,7 @@ public class AdminClientACLExample {
 
             Collection<AclBinding> acls = dar.values().get();
 
-            for (AclBinding ab : acls){
+            for (AclBinding ab : acls) {
                 LOG.info("ACL: " + ab.toString());
             }
         } catch (InterruptedException e) {
