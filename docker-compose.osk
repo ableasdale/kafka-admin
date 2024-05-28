@@ -1,12 +1,16 @@
+---
 services:
 
   broker:
-    image: confluentinc/cp-server:${CP_TAG}
+    image: krishnaconfluent/kafka-native:native-rc-0
     hostname: broker
     container_name: broker
+    #volumes:
+    #  - ./build/libs/kip-714-1.0-all.jar:/tmp/kip-714-1.0-all.jar
     ports:
       - "9092:9092"
-      - "8090:8090"
+    #command: "bash -c 'export CLASSPATH=/usr/share/java:$CLASSPATH'"
+    #command: "bash -c 'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-*.jar /etc/kafka-connect/jars/; /etc/confluent/docker/run'"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
@@ -14,22 +18,12 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_DEFAULT_REPLICATION_FACTOR: 1
       KAFKA_DEFAULT_MIN_ISR: 1
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CONFLUENT_CLUSTER_LINK_METADATA_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CONFLUENT_REPORTERS_TELEMETRY_AUTO_ENABLE: 'false'
-      KAFKA_CONFLUENT_BALANCER_ENABLE: 'false'
-      KAFKA_JMX_PORT: 9101
-      KAFKA_JMX_HOSTNAME: localhost
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@broker:29093'
       KAFKA_LISTENERS: 'PLAINTEXT://broker:29092,CONTROLLER://broker:29093,PLAINTEXT_HOST://0.0.0.0:9092'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
-      KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
       CLUSTER_ID: 'ZWe3nnZwTrKSM0aM2doAxQ'
-
-      # ACL Authorizer Functionality
-      KAFKA_AUTHORIZER_CLASS_NAME: io.confluent.kafka.security.authorizer.ConfluentServerAuthorizer
-      # Adding this to save time (otherwise we would need to provision ACLs in order for the example to work)
-      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: 'true'
+      #KAFKA_METRIC_REPORTERS: 'io.confluent.cse.KafkaClientTelemetry'
+      #CLASSPATH: '/tmp/kip-714-1.0-all.jar'
